@@ -130,8 +130,8 @@
 
     /* MEMBER ROW */
     .member-row {
-      display: grid; grid-template-columns: 1fr 80px 90px 80px auto;
-      gap: 8px; align-items: center;
+      display: grid; grid-template-columns: 1fr 70px 90px 90px 110px;
+      gap: 6px; align-items: center;
       padding: 9px 12px; border-radius: var(--radius-sm);
       margin-bottom: 5px; font-size: 12px;
     }
@@ -154,8 +154,8 @@
     .renewal-ok { background: var(--green-light); color: var(--green); }
 
     .member-header {
-      display: grid; grid-template-columns: 1fr 80px 90px 80px auto;
-      gap: 8px; padding: 6px 12px; margin-bottom: 4px;
+      display: grid; grid-template-columns: 1fr 70px 90px 90px 110px;
+      gap: 6px; padding: 6px 12px; margin-bottom: 4px;
       font-size: 10px; font-weight: 600; color: var(--text-light);
       letter-spacing: 1px; text-transform: uppercase;
     }
@@ -469,6 +469,9 @@ function teamExpireDate(teamName){
 function needsRenewal(member){
   const endDate = parseDate(member.end_date);
   if(!endDate) return false;
+  // Kalau sudah expired, tidak perlu renewal
+  const today = new Date(); today.setHours(0,0,0,0);
+  if(endDate < today) return false;
   const teamExp = teamExpireDate(member.team);
   if(!teamExp) return false;
   return teamExp < endDate;
@@ -540,7 +543,7 @@ function renderRekap(){
       html += `<div class="empty-msg" style="padding:1rem">belum ada member di team ini.</div>`;
     } else {
       html += `<div class="member-header">
-        <span>email</span><span>durasi</span><span>selesai</span><span>sisa hari</span><span></span>
+        <span>email</span><span>durasi</span><span>selesai</span><span>sisa hari</span><span>status</span>
       </div>`;
       mems.forEach(m=>{
         const days = daysLeft(m.end_date);
@@ -549,14 +552,16 @@ function renderRekap(){
         const renew = needsRenewal(m);
         const renewBadge = renew
           ? `<span class="renewal-badge renewal-needed">perlu renewal</span>`
-          : `<span class="renewal-badge renewal-ok">aman</span>`;
+          : days !== null && days < 0
+            ? `<span class="renewal-badge" style="background:#f5f5f5;color:#aaa">expired</span>`
+            : `<span class="renewal-badge renewal-ok">aman</span>`;
         const endD = parseDate(m.end_date);
         html += `<div class="member-row">
           <div class="member-email">${esc(m.email)}${m.harga?' <span style="color:var(--pink-dark);font-size:11px;">('+esc(m.harga)+')</span>':''}</div>
           <div class="member-durasi">${esc(m.durasi||'—')}</div>
           <div class="member-end">${endD?formatDate(endD):'—'}</div>
-          <div class="member-sisa ${sisCls}">${sisaText}</div>
-          <div>${renewBadge}${isAdmin?` <button class="btn-sm" style="margin-top:4px" onclick="deleteMember(${m.idx})">×</button>`:''}</div>
+          <div class="member-sisa ${sisCls}" style="white-space:nowrap">${sisaText}</div>
+          <div style="display:flex;align-items:center;gap:5px;">${renewBadge}${isAdmin?`<button class="btn-sm" onclick="deleteMember(${m.idx})">×</button>`:''}</div>
         </div>`;
       });
     }
