@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Rekap Canva Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #faf4fd;
+      --card: #ffffff;
+      --pink: #e896c0;
+      --pink-light: #fce8f4;
+      --pink-mid: #f4c0dc;
+      --pink-dark: #c0609a;
+      --purple: #b898d8;
+      --purple-light: #efe4fc;
+      --purple-mid: #d8c0f0;
+      --purple-dark: #8048b0;
+      --text: #503060;
+      --text-sub: #a07ab8;
+      --text-light: #c8b0d8;
+      --grad: linear-gradient(135deg, #e896c0, #b898d8);
+      --radius: 16px;
+      --radius-sm: 10px;
+      --green: #5a9a60;
+      --green-light: #e8f5e8;
+      --yellow: #c8900a;
+      --yellow-light: #fef8e8;
+      --red: #c05050;
+      --red-light: #fce8e8;
+    }
+    body {
+      font-family: 'Josefin Sans', sans-serif;
+      background: linear-gradient(160deg, #fdf0fa 0%, #f4eafc 50%, #fdf0fa 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 2rem 1rem 4rem;
+      letter-spacing: 0.3px;
+    }
+    .container { max-width: 720px; margin: 0 auto; }
+
+    h1 {
+      font-size: 20px; font-weight: 600; color: var(--purple-dark);
+      text-align: center; margin-bottom: 0.25rem; letter-spacing: 2px;
+    }
+    .subtitle { font-size: 12px; color: var(--text-light); text-align: center; margin-bottom: 1.5rem; letter-spacing: 1px; }
+
+    /* TABS */
+    .tab-bar {
+      display: flex; gap: 8px; margin-bottom: 1.25rem;
+      background: rgba(255,255,255,0.6); border: 1px solid var(--pink-mid);
+      border-radius: var(--radius); padding: 5px;
+    }
+    .tab-btn {
+      flex: 1; padding: 9px; border: none; border-radius: var(--radius-sm);
+      font-family: 'Josefin Sans', sans-serif; font-size: 12px; font-weight: 600;
+      letter-spacing: 1px; cursor: pointer; transition: all 0.2s;
+      background: transparent; color: var(--text-sub);
+    }
+    .tab-btn.active { background: var(--grad); color: white; }
+    .tab-btn:not(.active):hover { background: var(--pink-light); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* CARD */
+    .card {
+      background: var(--card); border: 1px solid var(--pink-mid);
+      border-radius: var(--radius); padding: 1.25rem;
+      margin-bottom: 1rem; box-shadow: 0 4px 16px rgba(180,120,200,0.08);
+    }
+    .card-title {
+      font-size: 13px; font-weight: 600; color: var(--purple-dark);
+      letter-spacing: 1.5px; margin-bottom: 1rem;
+      padding-bottom: 8px; border-bottom: 1px solid var(--purple-light);
+    }
+
+    /* INPUT FORMAT */
+    .format-box {
+      background: var(--purple-light); border-radius: var(--radius-sm);
+      padding: 10px 14px; margin-bottom: 1rem; font-size: 12px;
+      color: var(--text-sub); line-height: 2;
+    }
+    .format-box span { color: var(--purple-dark); font-weight: 600; }
+
+    textarea {
+      width: 100%; background: white; border: 1px solid var(--purple-mid);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-size: 13px; padding: 10px 14px; outline: none; resize: vertical;
+      min-height: 130px; font-family: 'Josefin Sans', sans-serif;
+      line-height: 1.8; letter-spacing: 0.3px;
+    }
+    textarea:focus { border-color: var(--purple); }
+
+    .btn {
+      background: var(--grad); border: none; border-radius: var(--radius-sm);
+      color: white; font-size: 12px; font-weight: 600; padding: 10px 20px;
+      cursor: pointer; font-family: 'Josefin Sans', sans-serif;
+      letter-spacing: 1px; transition: opacity 0.15s; margin-top: 8px;
+    }
+    .btn:hover { opacity: 0.88; }
+    .btn-full { width: 100%; }
+    .btn-sm {
+      background: none; border: 1px solid rgba(192,80,80,0.3);
+      border-radius: 6px; color: var(--red); font-size: 11px;
+      padding: 3px 10px; cursor: pointer; font-family: 'Josefin Sans', sans-serif;
+    }
+    .btn-sm:hover { background: var(--red-light); }
+
+    .err-msg { font-size: 12px; color: var(--red); margin-top: 6px; min-height: 18px; }
+    .ok-msg { font-size: 12px; color: var(--green); margin-top: 6px; min-height: 18px; }
+
+    /* TEAM CARDS */
+    .team-section { margin-bottom: 1.5rem; }
+    .team-header {
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(90deg, var(--pink-light), var(--purple-light));
+      border-radius: var(--radius-sm); padding: 10px 14px; margin-bottom: 8px;
+    }
+    .team-name { font-size: 14px; font-weight: 600; color: var(--purple-dark); letter-spacing: 1px; }
+    .team-expire { font-size: 11px; color: var(--text-sub); }
+    .team-expire-badge {
+      font-size: 11px; font-weight: 600; padding: 3px 10px;
+      border-radius: 50px; letter-spacing: 0.5px;
+    }
+    .badge-ok { background: var(--green-light); color: var(--green); }
+    .badge-warn { background: var(--yellow-light); color: var(--yellow); }
+    .badge-danger { background: var(--red-light); color: var(--red); }
+
+    /* MEMBER ROW */
+    .member-row {
+      display: grid; grid-template-columns: 1fr 80px 90px 80px auto;
+      gap: 8px; align-items: center;
+      padding: 9px 12px; border-radius: var(--radius-sm);
+      margin-bottom: 5px; font-size: 12px;
+    }
+    .member-row:nth-child(odd) { background: var(--pink-light); }
+    .member-row:nth-child(even) { background: var(--purple-light); }
+    .member-email { color: var(--text); font-weight: 400; word-break: break-all; }
+    .member-durasi { color: var(--text-sub); text-align: center; }
+    .member-end { color: var(--text-sub); text-align: center; }
+    .member-sisa { font-weight: 600; text-align: center; }
+    .sisa-ok { color: var(--green); }
+    .sisa-warn { color: var(--yellow); }
+    .sisa-danger { color: var(--red); }
+
+    .renewal-badge {
+      display: inline-block; font-size: 10px; font-weight: 600;
+      padding: 2px 8px; border-radius: 50px; letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+    .renewal-needed { background: #fff0e0; color: #c07000; }
+    .renewal-ok { background: var(--green-light); color: var(--green); }
+
+    .member-header {
+      display: grid; grid-template-columns: 1fr 80px 90px 80px auto;
+      gap: 8px; padding: 6px 12px; margin-bottom: 4px;
+      font-size: 10px; font-weight: 600; color: var(--text-light);
+      letter-spacing: 1px; text-transform: uppercase;
+    }
+    .member-header span:not(:first-child) { text-align: center; }
+
+    .empty-msg { text-align: center; padding: 1.5rem; color: var(--text-light); font-size: 12px; font-style: italic; }
+
+    /* TEAM FORM */
+    .team-form-row { display: flex; gap: 8px; align-items: flex-end; }
+    .form-group { flex: 1; }
+    .form-label { font-size: 11px; color: var(--text-sub); margin-bottom: 5px; display: block; letter-spacing: 0.5px; }
+    input[type="text"], input[type="date"] {
+      width: 100%; background: white; border: 1px solid var(--purple-mid);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-size: 13px; height: 36px; padding: 0 12px; outline: none;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+    input:focus { border-color: var(--purple); }
+
+    /* ADMIN BAR */
+    .admin-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      background: linear-gradient(90deg, var(--pink-light), var(--purple-light));
+      border-radius: var(--radius-sm); padding: 8px 14px; margin-bottom: 1rem;
+    }
+    .admin-status { font-size: 11px; color: var(--text-sub); font-weight: 300; letter-spacing: 0.5px; }
+    .admin-status.unlocked { color: var(--green); }
+    .btn-admin-toggle {
+      background: white; border: 1px solid var(--purple-mid);
+      border-radius: 50px; font-size: 10px; color: var(--text-sub);
+      padding: 4px 12px; cursor: pointer; font-family: 'Josefin Sans', sans-serif;
+    }
+    .btn-admin-toggle.active { border-color: var(--green); color: var(--green); }
+    .pw-row { display: flex; gap: 8px; margin-bottom: 0.5rem; }
+    .pw-row input[type="password"] {
+      flex: 1; background: white; border: 1px solid var(--purple-mid);
+      border-radius: var(--radius-sm); color: var(--text);
+      font-size: 12px; height: 34px; padding: 0 12px; outline: none;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+    .pw-row input:focus { border-color: var(--purple); }
+    .pw-btn {
+      background: var(--grad); border: none; border-radius: var(--radius-sm);
+      color: white; font-size: 11px; padding: 0 14px; cursor: pointer;
+      font-family: 'Josefin Sans', sans-serif;
+    }
+    .pw-error { color: var(--red); font-size: 11px; margin-bottom: 0.5rem; }
+
+    /* STATS */
+    .stats-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; margin-bottom: 1rem; }
+    .stat-card { background: var(--card); border: 1px solid var(--pink-mid); border-radius: var(--radius-sm); padding: 12px; text-align: center; }
+    .stat-val { font-size: 22px; font-weight: 600; color: var(--purple-dark); }
+    .stat-label { font-size: 10px; color: var(--text-light); letter-spacing: 1px; margin-top: 3px; }
+
+    /* LOADING */
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .spin { display: inline-block; animation: spin 1s linear infinite; }
+    .loading { text-align: center; padding: 2rem; color: var(--text-light); font-size: 13px; }
+
+    .hidden { display: none !important; }
+
+    /* SEARCH */
+    .search-wrap { position: relative; margin-bottom: 1rem; }
+    .search-wrap input {
+      width: 100%; padding-left: 36px;
+    }
+    .search-icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-light); font-size: 14px; }
+
+    /* FILTER */
+    .filter-row { display: flex; gap: 8px; margin-bottom: 1rem; flex-wrap: wrap; }
+    .filter-btn {
+      background: var(--purple-light); border: 1px solid transparent;
+      border-radius: 50px; padding: 5px 14px; font-size: 11px;
+      color: var(--text-sub); cursor: pointer; font-family: 'Josefin Sans', sans-serif;
+      letter-spacing: 0.5px; transition: all 0.15s;
+    }
+    .filter-btn.active { background: var(--grad); color: white; border-color: transparent; }
+    .filter-btn:not(.active):hover { border-color: var(--purple); }
+  </style>
+</head>
+<body>
+<div class="container">
+  <h1>rekap canva team</h1>
+  <p class="subtitle">@hallokokoro · manajemen member canva team premium</p>
+
+  <!-- ADMIN BAR -->
+  <div class="admin-bar">
+    <div class="admin-status" id="adminStatus">mode publik — hanya bisa melihat</div>
+    <button class="btn-admin-toggle" id="adminToggle" onclick="toggleAdmin()">masuk admin</button>
+  </div>
+  <div id="pwSection" class="hidden">
+    <div class="pw-row">
+      <input type="password" id="pwInput" placeholder="password admin..." />
+      <button class="pw-btn" onclick="submitPw()">masuk</button>
+    </div>
+    <div class="pw-error hidden" id="pwError">password salah.</div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats-row">
+    <div class="stat-card"><div class="stat-val" id="statTotal">—</div><div class="stat-label">total member</div></div>
+    <div class="stat-card"><div class="stat-val" id="statExpiring">—</div><div class="stat-label">habis &lt; 7 hari</div></div>
+    <div class="stat-card"><div class="stat-val" id="statRenewal">—</div><div class="stat-label">perlu renewal</div></div>
+  </div>
+
+  <!-- TABS -->
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('rekap')">rekap member</button>
+    <button class="tab-btn" onclick="switchTab('teams')">data team</button>
+    <button class="tab-btn" onclick="switchTab('input')" id="tabInput">tambah member</button>
+  </div>
+
+  <!-- REKAP TAB -->
+  <div class="tab-panel active" id="panel-rekap">
+    <div class="search-wrap">
+      <span class="search-icon">⌕</span>
+      <input type="text" id="searchInput" placeholder="cari email atau nama team..." oninput="renderRekap()" />
+    </div>
+    <div class="filter-row">
+      <button class="filter-btn active" onclick="setFilter('all', this)">semua</button>
+      <button class="filter-btn" onclick="setFilter('danger', this)">habis &lt; 3 hari</button>
+      <button class="filter-btn" onclick="setFilter('warn', this)">habis &lt; 7 hari</button>
+      <button class="filter-btn" onclick="setFilter('renewal', this)">perlu renewal</button>
+    </div>
+    <div id="rekapContent"><div class="loading"><span class="spin">↻</span> memuat data...</div></div>
+  </div>
+
+  <!-- TEAMS TAB -->
+  <div class="tab-panel" id="panel-teams">
+    <div id="teamsContent"><div class="loading"><span class="spin">↻</span> memuat...</div></div>
+    <div id="teamFormWrap" class="hidden">
+      <div class="card" style="margin-top:1rem;">
+        <div class="card-title">tambah team baru</div>
+        <div class="team-form-row">
+          <div class="form-group">
+            <label class="form-label">nama team</label>
+            <input type="text" id="teamName" placeholder="contoh: team candy17" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">tanggal expire team</label>
+            <input type="date" id="teamExpire" />
+          </div>
+          <button class="btn" onclick="addTeam()" style="margin-top:0;height:36px;">tambah</button>
+        </div>
+        <div class="ok-msg hidden" id="teamOkMsg"></div>
+        <div class="err-msg hidden" id="teamErrMsg"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- INPUT TAB -->
+  <div class="tab-panel" id="panel-input">
+    <div id="inputFormWrap">
+      <div class="card">
+        <div class="card-title">tambah member baru</div>
+        <div class="format-box">
+          format input:<br/>
+          <span>⌗ team candy17</span><br/>
+          <span>⌗ durasi : 6 bulan</span><br/>
+          <span>⌗ email : contoh@gmail.com 6k</span><br/>
+          <span>⌗ end durasi : 20 desember</span>
+        </div>
+        <textarea id="inputText" placeholder="paste format di sini..."></textarea>
+        <button class="btn btn-full" onclick="parseAndAdd()">tambah member</button>
+        <div class="err-msg" id="inputErr"></div>
+        <div class="ok-msg" id="inputOk"></div>
+      </div>
+    </div>
+    <div id="inputLocked" class="card" style="text-align:center;padding:2rem;color:var(--text-light);font-size:13px;">
+      masuk sebagai admin untuk menambah member
+    </div>
+  </div>
+</div>
+
+<script>
+const API = 'https://script.google.com/macros/s/AKfycbz7MBR5N7ecOpie6Hsy6rBqXZsKejuefKysCZIUuHF82UUI5TcsXU3oKkrOgsSYUE0zRA/exec';
+const PW = 'candylucu';
+
+let isAdmin = false;
+let members = [];
+let teams = [];
+let activeFilter = 'all';
+
+function g(id){ return document.getElementById(id); }
+
+// ADMIN
+function toggleAdmin(){
+  if(isAdmin){
+    isAdmin = false;
+    g('adminStatus').textContent = 'mode publik — hanya bisa melihat';
+    g('adminStatus').className = 'admin-status';
+    g('adminToggle').textContent = 'masuk admin';
+    g('adminToggle').classList.remove('active');
+    g('pwSection').classList.add('hidden');
+    updateAdminUI();
+    return;
+  }
+  g('pwSection').classList.toggle('hidden');
+  if(!g('pwSection').classList.contains('hidden')) g('pwInput').focus();
+}
+
+function submitPw(){
+  if(g('pwInput').value === PW){
+    isAdmin = true;
+    g('pwSection').classList.add('hidden');
+    g('adminStatus').textContent = 'mode admin aktif';
+    g('adminStatus').className = 'admin-status unlocked';
+    g('adminToggle').textContent = 'keluar admin';
+    g('adminToggle').classList.add('active');
+    g('pwInput').value = '';
+    g('pwError').classList.add('hidden');
+    updateAdminUI();
+  } else {
+    g('pwError').classList.remove('hidden');
+    g('pwInput').value = '';
+    setTimeout(()=>g('pwError').classList.add('hidden'), 2000);
+  }
+}
+
+function updateAdminUI(){
+  // tab input
+  if(isAdmin){
+    g('inputFormWrap').classList.remove('hidden');
+    g('inputLocked').classList.add('hidden');
+    g('teamFormWrap').classList.remove('hidden');
+  } else {
+    g('inputFormWrap').classList.add('hidden');
+    g('inputLocked').classList.remove('hidden');
+    g('teamFormWrap').classList.add('hidden');
+  }
+  renderRekap();
+  renderTeams();
+}
+
+// TABS
+function switchTab(tab){
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  g('panel-'+tab).classList.add('active');
+  const idx = {rekap:0, teams:1, input:2}[tab];
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+}
+
+// FILTER
+function setFilter(f, el){
+  activeFilter = f;
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  renderRekap();
+}
+
+// API
+async function apiCall(params){
+  const url = new URL(API);
+  Object.entries(params).forEach(([k,v])=>url.searchParams.set(k,v));
+  return (await fetch(url.toString())).json();
+}
+
+// LOAD
+async function loadAll(){
+  try{
+    const res = await apiCall({action:'getAll'});
+    members = res.members || [];
+    teams = res.teams || [];
+    renderRekap();
+    renderTeams();
+    updateStats();
+  } catch(e){
+    g('rekapContent').innerHTML = '<div class="loading" style="color:var(--red)">gagal memuat data.</div>';
+  }
+}
+
+// DATE HELPERS
+function parseDate(str){
+  if(!str) return null;
+  str = String(str).trim().toLowerCase();
+  const MONTHS = {januari:1,februari:2,maret:3,april:4,mei:5,juni:6,juli:7,agustus:8,september:9,oktober:10,november:11,desember:12,jan:1,feb:2,mar:3,apr:4,jun:6,jul:7,agt:8,sep:9,okt:10,nov:11,des:12};
+  // dd monthname / dd monthname yyyy
+  const m1 = str.match(/(\d{1,2})\s+([a-z]+)(?:\s+(\d{4}))?/);
+  if(m1){
+    const day = parseInt(m1[1]);
+    const mon = MONTHS[m1[2]];
+    const year = m1[3] ? parseInt(m1[3]) : new Date().getFullYear();
+    if(mon) return new Date(year, mon-1, day);
+  }
+  // yyyy-mm-dd
+  const m2 = str.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if(m2) return new Date(parseInt(m2[1]), parseInt(m2[2])-1, parseInt(m2[3]));
+  return null;
+}
+
+function formatDate(d){
+  if(!d) return '—';
+  const MONTHS = ['Jan','Feb','Mar','Apr','Mei','Jun','Jul','Agt','Sep','Okt','Nov','Des'];
+  return d.getDate() + ' ' + MONTHS[d.getMonth()] + ' ' + d.getFullYear();
+}
+
+function daysLeft(dateStr){
+  const d = parseDate(dateStr);
+  if(!d) return null;
+  const today = new Date(); today.setHours(0,0,0,0);
+  return Math.ceil((d - today) / 86400000);
+}
+
+function teamExpireDate(teamName){
+  const t = teams.find(t=>t.nama.toLowerCase()===teamName.toLowerCase());
+  if(!t) return null;
+  return parseDate(t.expire);
+}
+
+function needsRenewal(member){
+  const endDate = parseDate(member.end_date);
+  if(!endDate) return false;
+  const teamExp = teamExpireDate(member.team);
+  if(!teamExp) return false;
+  return teamExp < endDate;
+}
+
+// STATS
+function updateStats(){
+  const today = new Date(); today.setHours(0,0,0,0);
+  let expiring = 0, renewal = 0;
+  members.forEach(m=>{
+    const d = daysLeft(m.end_date);
+    if(d !== null && d <= 7 && d >= 0) expiring++;
+    if(needsRenewal(m)) renewal++;
+  });
+  g('statTotal').textContent = members.length;
+  g('statExpiring').textContent = expiring;
+  g('statRenewal').textContent = renewal;
+}
+
+// RENDER REKAP
+function renderRekap(){
+  const search = (g('searchInput').value||'').toLowerCase();
+  const grouped = {};
+  teams.forEach(t=>{ grouped[t.nama] = []; });
+
+  members.forEach((m, idx)=>{
+    if(!grouped[m.team]) grouped[m.team] = [];
+    grouped[m.team].push({...m, idx});
+  });
+
+  let html = '';
+  const teamNames = Object.keys(grouped);
+
+  if(!teamNames.length){
+    g('rekapContent').innerHTML = '<div class="empty-msg">belum ada data. tambah team dan member terlebih dahulu.</div>';
+    return;
+  }
+
+  teamNames.forEach(teamName=>{
+    let mems = grouped[teamName];
+
+    // search filter
+    if(search) mems = mems.filter(m=> m.email.toLowerCase().includes(search) || m.team.toLowerCase().includes(search));
+
+    // status filter
+    if(activeFilter === 'danger') mems = mems.filter(m=>{ const d=daysLeft(m.end_date); return d!==null&&d<=3&&d>=0; });
+    else if(activeFilter === 'warn') mems = mems.filter(m=>{ const d=daysLeft(m.end_date); return d!==null&&d<=7&&d>=0; });
+    else if(activeFilter === 'renewal') mems = mems.filter(m=>needsRenewal(m));
+
+    if(!mems.length && search) return;
+
+    const teamData = teams.find(t=>t.nama===teamName);
+    const teamDays = teamData ? daysLeft(teamData.expire) : null;
+    let expBadge = '';
+    if(teamDays !== null){
+      const cls = teamDays <= 3 ? 'badge-danger' : teamDays <= 14 ? 'badge-warn' : 'badge-ok';
+      const label = teamDays < 0 ? 'expired' : teamDays === 0 ? 'hari ini' : teamDays + ' hari lagi';
+      expBadge = `<span class="team-expire-badge ${cls}">team expire: ${label}</span>`;
+    }
+
+    html += `<div class="team-section">
+      <div class="team-header">
+        <div class="team-name">${esc(teamName)}</div>
+        ${expBadge}
+        ${isAdmin&&teamData?`<button class="btn-sm" onclick="deleteTeam(${teams.indexOf(teamData)})">× hapus team</button>`:''}
+      </div>`;
+
+    if(!mems.length){
+      html += `<div class="empty-msg" style="padding:1rem">belum ada member di team ini.</div>`;
+    } else {
+      html += `<div class="member-header">
+        <span>email</span><span>durasi</span><span>selesai</span><span>sisa hari</span><span></span>
+      </div>`;
+      mems.forEach(m=>{
+        const days = daysLeft(m.end_date);
+        const sisCls = days === null ? '' : days <= 3 ? 'sisa-danger' : days <= 7 ? 'sisa-warn' : 'sisa-ok';
+        const sisaText = days === null ? '—' : days < 0 ? 'expired' : days === 0 ? 'hari ini' : days + ' hari';
+        const renew = needsRenewal(m);
+        const renewBadge = renew
+          ? `<span class="renewal-badge renewal-needed">perlu renewal</span>`
+          : `<span class="renewal-badge renewal-ok">aman</span>`;
+        const endD = parseDate(m.end_date);
+        html += `<div class="member-row">
+          <div class="member-email">${esc(m.email)}${m.harga?' <span style="color:var(--pink-dark);font-size:11px;">('+esc(m.harga)+')</span>':''}</div>
+          <div class="member-durasi">${esc(m.durasi||'—')}</div>
+          <div class="member-end">${endD?formatDate(endD):'—'}</div>
+          <div class="member-sisa ${sisCls}">${sisaText}</div>
+          <div>${renewBadge}${isAdmin?` <button class="btn-sm" style="margin-top:4px" onclick="deleteMember(${m.idx})">×</button>`:''}</div>
+        </div>`;
+      });
+    }
+    html += `</div>`;
+  });
+
+  if(!html) html = '<div class="empty-msg">tidak ada data yang cocok.</div>';
+  g('rekapContent').innerHTML = html;
+}
+
+// RENDER TEAMS
+function renderTeams(){
+  if(!teams.length){
+    g('teamsContent').innerHTML = '<div class="empty-msg">belum ada team. tambah team terlebih dahulu.</div>';
+    return;
+  }
+  let html = '<div class="card"><div class="card-title">daftar team premium</div>';
+  teams.forEach((t,i)=>{
+    const days = daysLeft(t.expire);
+    const cls = days===null?'badge-ok':days<=3?'badge-danger':days<=14?'badge-warn':'badge-ok';
+    const label = days===null?'—':days<0?'expired':days===0?'hari ini':days+' hari lagi';
+    const expD = parseDate(t.expire);
+    html += `<div class="member-row" style="grid-template-columns:1fr 120px 100px auto;">
+      <div class="member-email" style="font-weight:600">${esc(t.nama)}</div>
+      <div class="member-end">${expD?formatDate(expD):'—'}</div>
+      <div><span class="team-expire-badge ${cls}">${label}</span></div>
+      <div>${isAdmin?`<button class="btn-sm" onclick="deleteTeam(${i})">× hapus</button>`:''}</div>
+    </div>`;
+  });
+  html += '</div>';
+  g('teamsContent').innerHTML = html;
+}
+
+// PARSE FORMAT
+function parseFormat(text){
+  const lines = text.split('\n').map(l=>l.trim()).filter(l=>l);
+  const data = {};
+  lines.forEach(line=>{
+    const clean = line.replace(/^[⌗#\-\*]+\s*/,'').trim();
+    if(/^team\s+/i.test(clean)) data.team = clean.replace(/^team\s+/i,'').trim();
+    else if(/^durasi\s*:/i.test(clean)) data.durasi = clean.replace(/^durasi\s*:\s*/i,'').trim();
+    else if(/^email\s*:/i.test(clean)){
+      const parts = clean.replace(/^email\s*:\s*/i,'').trim().split(/\s+/);
+      data.email = parts[0];
+      data.harga = parts.slice(1).join(' ');
+    }
+    else if(/^end\s+durasi\s*:/i.test(clean)) data.end_date = clean.replace(/^end\s+durasi\s*:\s*/i,'').trim();
+  });
+  return data;
+}
+
+// ADD MEMBER
+async function parseAndAdd(){
+  if(!isAdmin) return;
+  const text = g('inputText').value.trim();
+  if(!text){ showMsg('inputErr','format tidak boleh kosong.'); return; }
+  const data = parseFormat(text);
+  if(!data.team){ showMsg('inputErr','team tidak ditemukan. pastikan ada baris "⌗ team ..."'); return; }
+  if(!data.email){ showMsg('inputErr','email tidak ditemukan.'); return; }
+  if(!data.end_date){ showMsg('inputErr','end durasi tidak ditemukan.'); return; }
+  if(!teams.find(t=>t.nama.toLowerCase()===data.team.toLowerCase())){
+    showMsg('inputErr',`team "${data.team}" belum ada. tambah team dulu di tab "data team".`); return;
+  }
+  try{
+    await apiCall({action:'addMember', team:data.team, email:data.email, durasi:data.durasi||'', end_date:data.end_date, harga:data.harga||''});
+    showMsg('inputOk','member berhasil ditambahkan!');
+    g('inputText').value = '';
+    await loadAll();
+  } catch(e){ showMsg('inputErr','gagal menyimpan. coba lagi.'); }
+}
+
+// ADD TEAM
+async function addTeam(){
+  if(!isAdmin) return;
+  const nama = g('teamName').value.trim();
+  const expire = g('teamExpire').value;
+  if(!nama){ showMsg('teamErrMsg','nama team tidak boleh kosong.'); return; }
+  if(!expire){ showMsg('teamErrMsg','tanggal expire tidak boleh kosong.'); return; }
+  try{
+    await apiCall({action:'addTeam', nama, expire});
+    showMsg('teamOkMsg','team berhasil ditambahkan!');
+    g('teamName').value=''; g('teamExpire').value='';
+    await loadAll();
+  } catch(e){ showMsg('teamErrMsg','gagal menyimpan.'); }
+}
+
+// DELETE
+async function deleteMember(idx){
+  if(!isAdmin||!confirm('hapus member ini?')) return;
+  try{ await apiCall({action:'deleteMember', idx}); await loadAll(); }
+  catch(e){ alert('gagal menghapus.'); }
+}
+
+async function deleteTeam(idx){
+  if(!isAdmin||!confirm('hapus team ini? semua member di team ini tidak akan terhapus.')) return;
+  try{ await apiCall({action:'deleteTeam', idx}); await loadAll(); }
+  catch(e){ alert('gagal menghapus.'); }
+}
+
+function showMsg(id, msg){
+  const el = g(id);
+  el.textContent = msg;
+  el.classList.remove('hidden');
+  setTimeout(()=>el.classList.add('hidden'), 3000);
+}
+
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ENTER KEY
+g('pwInput').addEventListener('keydown', e=>{ if(e.key==='Enter') submitPw(); });
+
+// INIT
+updateAdminUI();
+loadAll();
+</script>
+</body>
+</html>
