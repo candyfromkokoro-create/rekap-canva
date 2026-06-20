@@ -148,7 +148,7 @@
     .renewal-badge {
       display: inline-block; font-size: 10px; font-weight: 600;
       padding: 2px 8px; border-radius: 50px; letter-spacing: 0.5px;
-      white-space: nowrap;
+      white-space: nowrap; text-align: center;
     }
     .renewal-needed { background: #fff0e0; color: #c07000; }
     .renewal-ok { background: var(--green-light); color: var(--green); }
@@ -561,7 +561,7 @@ function renderRekap(){
           <div class="member-durasi">${esc(m.durasi||'—')}</div>
           <div class="member-end">${endD?formatDate(endD):'—'}</div>
           <div class="member-sisa ${sisCls}" style="white-space:nowrap">${sisaText}</div>
-          <div style="display:flex;align-items:center;gap:5px;">${renewBadge}${isAdmin?`<button class="btn-sm" onclick="deleteMember(${m.idx})">×</button>`:''}</div>
+          <div style="display:flex;align-items:center;justify-content:center;gap:5px;">${renewBadge}${isAdmin?`<button class="btn-sm" onclick="deleteMember(${m.idx})">×</button>`:''}</div>
         </div>`;
       });
     }
