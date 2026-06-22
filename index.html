@@ -508,8 +508,15 @@ function renderRekap(){
   teamNames.forEach(teamName=>{
     let mems = grouped[teamName];
 
-    // search filter
-    if(search) mems = mems.filter(m=> m.email.toLowerCase().includes(search) || m.team.toLowerCase().includes(search));
+    // Sort by end_date ascending
+    mems.sort((a,b)=>{
+      const da = parseDate(a.end_date);
+      const db = parseDate(b.end_date);
+      if(!da && !db) return 0;
+      if(!da) return 1;
+      if(!db) return -1;
+      return da - db;
+    });
 
     // status filter
     if(activeFilter === 'danger') mems = mems.filter(m=>{ const d=daysLeft(m.end_date); return d!==null&&d<=3&&d>=0; });
