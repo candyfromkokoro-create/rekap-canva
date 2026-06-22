@@ -130,20 +130,20 @@
 
     /* MEMBER ROW */
     .member-row {
-      display: grid; grid-template-columns: 1fr 70px 90px 90px 110px;
-      gap: 6px; align-items: center;
-      padding: 9px 12px; border-radius: var(--radius-sm);
-      margin-bottom: 5px; font-size: 12px;
+      padding: 10px 12px; border-radius: var(--radius-sm);
+      margin-bottom: 6px; font-size: 12px;
     }
     .member-row:nth-child(odd) { background: var(--pink-light); }
     .member-row:nth-child(even) { background: var(--purple-light); }
-    .member-email { color: var(--text); font-weight: 400; word-break: break-all; }
-    .member-durasi { color: var(--text-sub); text-align: center; }
-    .member-end { color: var(--text-sub); text-align: center; }
-    .member-sisa { font-weight: 600; text-align: center; }
+    .member-email { color: var(--text); font-weight: 600; word-break: break-all; font-size: 12px; margin-bottom: 5px; }
+    .member-meta { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .member-durasi { color: var(--text-light); font-size: 11px; }
+    .member-end { color: var(--text-sub); font-size: 11px; }
+    .member-sisa { font-weight: 600; font-size: 11px; }
     .sisa-ok { color: var(--green); }
     .sisa-warn { color: var(--yellow); }
     .sisa-danger { color: var(--red); }
+    .member-bottom { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; }
 
     .renewal-badge {
       display: inline-block; font-size: 10px; font-weight: 600;
@@ -153,13 +153,7 @@
     .renewal-needed { background: #fff0e0; color: #c07000; }
     .renewal-ok { background: var(--green-light); color: var(--green); }
 
-    .member-header {
-      display: grid; grid-template-columns: 1fr 70px 90px 90px 110px;
-      gap: 6px; padding: 6px 12px; margin-bottom: 4px;
-      font-size: 10px; font-weight: 600; color: var(--text-light);
-      letter-spacing: 1px; text-transform: uppercase;
-    }
-    .member-header span:not(:first-child) { text-align: center; }
+    .member-header { display: none; }
 
     .empty-msg { text-align: center; padding: 1.5rem; color: var(--text-light); font-size: 12px; font-style: italic; }
 
@@ -469,12 +463,13 @@ function teamExpireDate(teamName){
 function needsRenewal(member){
   const endDate = parseDate(member.end_date);
   if(!endDate) return false;
-  // Kalau sudah expired, tidak perlu renewal
   const today = new Date(); today.setHours(0,0,0,0);
+  // Kalau member sudah expired, tidak perlu renewal
   if(endDate < today) return false;
   const teamExp = teamExpireDate(member.team);
   if(!teamExp) return false;
-  return teamExp < endDate;
+  // Perlu renewal hanya jika: team sudah expired TAPI masa member masih aktif
+  return teamExp < today && endDate >= today;
 }
 
 // STATS
@@ -542,9 +537,7 @@ function renderRekap(){
     if(!mems.length){
       html += `<div class="empty-msg" style="padding:1rem">belum ada member di team ini.</div>`;
     } else {
-      html += `<div class="member-header">
-        <span>email</span><span>durasi</span><span>selesai</span><span>sisa hari</span><span>status</span>
-      </div>`;
+      html += `<div class="member-header"></div>`;
       mems.forEach(m=>{
         const days = daysLeft(m.end_date);
         const sisCls = days === null ? '' : days <= 3 ? 'sisa-danger' : days <= 7 ? 'sisa-warn' : 'sisa-ok';
@@ -557,11 +550,16 @@ function renderRekap(){
             : `<span class="renewal-badge renewal-ok">aman</span>`;
         const endD = parseDate(m.end_date);
         html += `<div class="member-row">
-          <div class="member-email">${esc(m.email)}${m.harga?' <span style="color:var(--pink-dark);font-size:11px;">('+esc(m.harga)+')</span>':''}</div>
-          <div class="member-durasi">${esc(m.durasi||'—')}</div>
-          <div class="member-end">${endD?formatDate(endD):'—'}</div>
-          <div class="member-sisa ${sisCls}" style="white-space:nowrap">${sisaText}</div>
-          <div style="display:flex;align-items:center;justify-content:center;gap:5px;">${renewBadge}${isAdmin?`<button class="btn-sm" onclick="deleteMember(${m.idx})">×</button>`:''}</div>
+          <div class="member-email">${esc(m.email)}${m.harga?' <span style="color:var(--pink-dark);font-size:10px;">('+esc(m.harga)+')</span>':''}</div>
+          <div class="member-meta">
+            <span class="member-end">📅 ${endD?formatDate(endD):'—'}</span>
+            <span class="member-sisa ${sisCls}">⏳ ${sisaText}</span>
+            ${m.durasi?`<span class="member-durasi">🕐 ${esc(m.durasi)}</span>`:''}
+          </div>
+          <div class="member-bottom">
+            ${renewBadge}
+            ${isAdmin?`<button class="btn-sm" onclick="deleteMember(${m.idx})">× hapus</button>`:''}
+          </div>
         </div>`;
       });
     }
